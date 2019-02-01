@@ -50,6 +50,15 @@
         }
       }
     },
+    // watch: {
+    //   'wizzardData' (value) {
+    //     this.form.recipient = value
+    //   }
+    // },
+    // === OR ===
+    activated () {
+      this.form.recipient = this.wizzardData.name
+    },
     methods: {
       submit () {
         this.$emit('update', {
