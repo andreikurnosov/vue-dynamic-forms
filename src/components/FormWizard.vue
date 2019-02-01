@@ -3,7 +3,7 @@
     <div v-if="wizzardInProgress" v-show="asyncState !== 'pending'">
       <keep-alive>
         <component
-          ref="currentUser"
+          ref="currentStep"
           :is="currentStep"
           @update="processStep"
           :wizzard-data="form"
