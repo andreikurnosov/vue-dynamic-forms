@@ -5,7 +5,6 @@
         <component
           ref="currentStep"
           :is="currentStep"
-          @update="processStep"
           @updateAsyncState="updateAsyncState"
           :wizzard-data="form"
         ></component>
@@ -25,12 +24,9 @@
         </button>
         <button
           @click="nextButtonAction"
-          :disabled="!canGoNext"
           class="btn"
         >{{isLastStep ? 'Complete Order' : 'Next'}}</button>
       </div>
-
-      <pre><code>{{form}}</code></pre>
     </div>
     <div v-else>
       <h1 class="title">Thank you!</h1>
@@ -65,7 +61,6 @@ export default {
   data () {
     return {
       currentStepNumber: 1,
-      canGoNext: false,
       asyncState: null,
       steps: [
         'FormPlanPicker',
@@ -124,30 +119,24 @@ export default {
     },
 
     nextButtonAction () {
-      if (this.isLastStep) {
-        this.submitOrder()
-      } else {
-        this.goNext()
-      }
-    },
 
-    processStep (step) {
-      Object.assign(this.form, step.data)
-      this.canGoNext = step.valid
+      this.$refs.currentStep.submit()
+        .then(stepData => {
+          Object.assign(this.form, stepData)
+            if (this.isLastStep) {
+              this.submitOrder()
+            } else {
+              this.goNext()
+            }
+        })
+        .catch(err => console.log(err))
+
     },
     goBack () {
       this.currentStepNumber--
-      this.canGoNext = true
     },
     goNext () {
       this.currentStepNumber++
-
-      // this.canGoNext = false
-
-      this.$nextTick(() => {
-        // this.$refs.currentStep.submit()
-        this.canGoNext = !this.$refs.currentStep.$v.$invalid
-      })
     }
   }
 }
