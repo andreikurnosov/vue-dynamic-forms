@@ -2,6 +2,7 @@
   <div>
     <keep-alive>
       <component
+        ref="currentUser"
         :is="currentStep"
         @update="processStep"
         :wizzard-data="form"
@@ -90,7 +91,13 @@ export default {
     },
     goNext () {
       this.currentStepNumber++
-      this.canGoNext = false
+
+      // this.canGoNext = false
+
+      this.$nextTick(() => {
+        // this.$refs.currentStep.submit()
+        this.canGoNext = !this.$refs.currentStep.$v.$invalid
+      })
     }
   }
 }
